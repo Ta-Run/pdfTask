@@ -1,11 +1,12 @@
 "use client"
 
 import Link from "next/link"
+import PdfHome from "./Home/page"
 
 export default function Home() {
   return (
   <div>
-    <Link href="Home">Home Page</Link>
+    <PdfHome/>
   </div>
 
   )

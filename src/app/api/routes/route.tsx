@@ -1,3 +1,7 @@
+
+
+
+
 export async function GET(request:any){
-    return new Response("hello ,next js")
+    return new Response("hello ,akshat js")
 }

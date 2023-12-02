@@ -1,47 +1,18 @@
-import mongoose, { ConnectOptions, Mongoose } from 'mongoose';
+import mongoose from 'mongoose';
 
-declare global {
-  namespace NodeJS {
-    interface Global {
-      mongoose: Mongoose | undefined;
-    }
-  }
-}
-
-const MONGODB_URI: string | undefined = process.env.MONGODB_URI;
-
-if (MONGODB_URI === undefined) {
-  throw new Error('Please define Mongo DB URI');
-}
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = { conn: null, promise: null };
-}
-
-async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts: ConnectOptions = {
-      bufferCommands: false,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
-  }
+const dbConnect = async (): Promise<void> => {
+  console.log("connect wait config");
 
   try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
+    await mongoose.connect("mongodb://127.0.0.1:27017/pdfInfo");
 
-  return cached.conn;
-}
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+  }
+};
+
+// Call the function to establish the connection
+dbConnect();
 
 export default dbConnect;

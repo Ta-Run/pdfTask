@@ -1,13 +1,15 @@
 "use client"
-
-import Link from "next/link"
 import PdfHome from "./Home/page"
+import AddUsers from "./components/AddUsers"
+import DisplayUser from "./components/DisplayUser"
 
 export default function Home() {
   return (
-  <div>
-    <PdfHome/>
-  </div>
+    <div>
+      <PdfHome />
+      <AddUsers />
+      <DisplayUser />
+    </div>
 
   )
 }

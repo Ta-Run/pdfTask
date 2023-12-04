@@ -1,14 +1,22 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
+import { addUser } from '../redux/slice';
+import { useDispatch } from 'react-redux';
 
-// Define the AddUsers component
 const AddUsers: React.FC = () => {
-  // Your component logic goes here
+  const [name, setName] = useState('')
+  const dispatch: any = useDispatch();
+
+  const handleuseDispatch = () => {
+    dispatch(addUser(name))
+  }
 
   return (
     <div>
       {/* JSX for your component */}
       AddUsers Component
-      <input type="text" placeholder='add usera' />
+      <input type="text" onChange={(e) => setName(e.target.value)} placeholder='add usera' />
+      <button onClick={handleuseDispatch}>Add</button>
     </div>
   );
 };

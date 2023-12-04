@@ -1,27 +1,33 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit'
 
-const initialState = {
-    users: []
-}
+
 interface User {
     name: string,
-    data: any
-    //   id:string
+    data: {
+        id: String,
+        name: string,
+    }[];
 }
 
+const initialState: User = {
+    data: [],
+    name: 'addUser'
+}
+   console.log(initialState)
 const Slice = createSlice({
     initialState,
     reducers: {
-        addUser: (state, action) => {
-            const data:{}= {
+        addUser: (state, action: PayloadAction<string>) => {
+            console.log(action);
+            const newData: any = {
                 id: nanoid(),
-                name: action.name
+                name: action.payload
             }
-            state.users.push(data)
+            state.data.push(newData)
         }
     },
-    name: ''
+    name: 'addUser'
 })
-
-export const {addUser} = Slice.actions;
+console.log(Slice.actions)
+export const { addUser } = Slice.actions;
 export default Slice.reducer;

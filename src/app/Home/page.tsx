@@ -14,12 +14,10 @@ function PdfHome() {
     setNumPages(numPages);
   }
 
-    // console.log(numPages)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
       const file = files[0];
-      // const fileURL = URL.createObjectURL(file); // Convert File to URL
       setSelectedFile(file);
     }
   }
@@ -30,7 +28,7 @@ function PdfHome() {
       setPageNumber(i)
     }
   }
-console.log(pageNumber)
+
   return (
     <div className='bg-teal-100 '>
       <div className="flex justify-around  ,shadow hover:shadow-lg" >
@@ -40,10 +38,7 @@ console.log(pageNumber)
       </div>
       <div className="flex justify-around ">
         <Document file={selectedFile} onLoadSuccess={onDocumentLoadSuccess}>
-        {/* {numPages.map((index: any)=>{
-           console.log("index",index)
-        })} */}
-          <Page className="py-12" devicePixelRatio={1} pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} scale={1.5} loading={"Loading page…"} />
+            <Page className="py-12" devicePixelRatio={1} pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} scale={1.5} loading={"Loading page…"} />
         </Document>
       </div>
       <div className="flex justify-around ">

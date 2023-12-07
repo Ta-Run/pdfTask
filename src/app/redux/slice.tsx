@@ -1,8 +1,7 @@
-import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit'
-
-
+import { PayloadAction, createAsyncThunk, createSlice, current, nanoid } from '@reduxjs/toolkit'
 interface User {
     name: string,
+    fetchUserData: String | [],
     data: {
         id: String,
         name: string,
@@ -11,23 +10,40 @@ interface User {
 
 const initialState: User = {
     data: [],
-    name: 'addUser'
+    name: 'addUser',
+    fetchUserData: []
 }
-   console.log(initialState)
+
+export const fetchData = createAsyncThunk("fetchUer", async () => {
+    console.log('action');
+    const result = await fetch("http://localhost:3000/api/userdetail");
+    return result.json();
+
+})
 const Slice = createSlice({
     initialState,
     reducers: {
         addUser: (state, action: PayloadAction<string>) => {
-            console.log(action);
             const newData: any = {
                 id: nanoid(),
                 name: action.payload
             }
-            state.data.push(newData)
+            let localData = JSON.stringify(current(state.data))
+            state.data.push(newData);
+            localStorage.setItem('users', localData)
+            console.log(current(state.data))
         }
     },
-    name: 'addUser'
+    name: 'addUser',
+
+    extraReducers: (builder: any) => {
+        builder.addCase(fetchData.fulfilled, (state: { issLoading: boolean; fetchUserData: string | {}}, action: PayloadAction<String>) => {
+            state.issLoading = false,
+                state.fetchUserData = action.payload
+        })
+    }
 })
-console.log(Slice.actions)
+
+
 export const { addUser } = Slice.actions;
 export default Slice.reducer;

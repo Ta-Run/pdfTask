@@ -1,7 +1,9 @@
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+import { fetchData } from '../redux/slice';
+import { useDispatch } from 'react-redux';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
@@ -9,6 +11,7 @@ function PdfHome() {
   const [numPages, setNumPages] = useState<number | any|undefined>();
   const [pageNumber, setPageNumber] = useState<number | any>(1);
   const [selectedFile, setSelectedFile] = useState<File | null | any>(null);
+  const usedispatch:any = useDispatch();
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(numPages);
@@ -22,6 +25,13 @@ function PdfHome() {
     }
   }
 
+   useEffect( ()=>{
+    const data= usedispatch(fetchData())
+      data.then((res:any)=>{
+        console.log(res)
+      })
+  },[])
+
   const nextPage=()=>{
     const pageData:any=numPages
     for(let i=1;i<=pageData;i++){
@@ -30,8 +40,8 @@ function PdfHome() {
   }
 
   return (
-    <div className='bg-teal-100 '>
-      <div className="flex justify-around  ,shadow hover:shadow-lg" >
+    <div className="h-14 bg-gradient-to-r from-violet-500 to-fuchsia-500">
+      <div className="flex justify-around,shadow hover:shadow-lg" >
         <form >
           <input type="file" onChange={(e) => handleFileChange(e)} />
         </form>

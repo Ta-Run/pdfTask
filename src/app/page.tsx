@@ -1,11 +1,10 @@
 "use client"
-import PdfHome from "./Home/page"
-
+import PdfHome from "./home/page"
 
 export default function Home() {
   return (
     <div>
-      <PdfHome />
+    <PdfHome/>
     </div>
 
   )

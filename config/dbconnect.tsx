@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const dbConnect = async (): Promise<void> => {
-  console.log("connect wait config");
 
   try {
     await mongoose.connect("mongodb://127.0.0.1:27017/pdfInfo");

@@ -33,31 +33,38 @@ function PdfHome() {
     })
   })
 
-  const nextPage = () => {
-    const pageData: any = numPages
-    for (let i = 1; i <= pageData; i++) {
-      setPageNumber(i)
-    }
-  }
-
   return (
-    <div className='' >
-      <div className='h-screen flex items-center justify-center '>
-        <form className=' h-48 max-h-full ... border-4 rounded-xl border-emerald-400 '>
-          <input type="file" onChange={(e) => handleFileChange(e)} />
+    <div className='md:container md:mx-auto px-4 rounded-md'>
+      <div className='md:flex justify-center mt-14 box-border h-132 w-132 p-4 border-4 py-12 rounded-md'>
+        <Document className="flex justify-center...  " file={selectedFile} onLoadSuccess={onDocumentLoadSuccess}>
+          <Page className="" devicePixelRatio={1} pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} scale={1.5} loading={"Loading page…"} />
+        </Document>
+        <form className='mt-8'>
+          <input type="file" className='file:border file:border-solid ..' onChange={(e) => handleFileChange(e)} />
         </form>
+        <div className='grid grid-cols-3 gap-4 place-items-end h-26 ...'>
+          <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ...">
+            Save Changes
+          </button>
+        </div>
+      </div>
+      <div className='box-border h-132 w-132 p-4 border-4 mt-12 shadow-2xl rounded-md'>
+        Add Filter and search bar data for get the data
+        <input type="text" placeholder='Serach Pdf' />
+        <button className="transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none ...">
+          Search
+        </button>
       </div>
 
-      <div className='flex items-center...'>
-        <Document className="py-12" file={selectedFile} onLoadSuccess={onDocumentLoadSuccess}>
-          <Page className="py-12" devicePixelRatio={1} pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} scale={1.5} loading={"Loading page…"} />
-        </Document>
-      </div>
-      <div >
-        Page {pageNumber} of {numPages || 0}
-        <select>
-          <option value="">{numPages}</option>
-        </select>
+      <div className='md:flex justify-center my-8  rounded-md'>
+        Recent Added Files
+        <div className='sm:flex justify-center rounded-md'>
+          <div className='mx-2 box-border h-56 w-56 p-4 border-4 shadow-2xl hover:bg-violet-200 rounded-md ...'>PDf1</div>
+          <div className='mx-2 box-border h-56 w-56 p-4 border-4  shadow-2xl hover:bg-violet-200 rounded-md..'>PDf2</div>
+        </div>
+        <div className='sm:flex justify-center rounded-md'>
+          <div className='mx-2 box-border h-56 w-56 p-4 border-4  shadow-2xl hover:bg-violet-200 rounded-md..'>PDf3</div>
+        </div>
       </div>
     </div>
   );

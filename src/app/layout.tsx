@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body  className='bg-slate-300'>
+      <body  className='max-sm:bg-slate-300 sm:bg-green-200 lg:bg-blue-200 md:bg-neutral-950 from-gray-100s' >
         <Providers>
         {children}
         </Providers>

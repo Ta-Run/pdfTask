@@ -9,8 +9,10 @@ export async function GET(request:any){
 }
 
 export async function POST(request:any){
+   // console.log(req)
    await dbConnect();
    const payload = await request.json();
+   console.log(payload)
    let user= new User(payload)
    const result = await user.save();
    return  NextResponse.json({result,success:true});

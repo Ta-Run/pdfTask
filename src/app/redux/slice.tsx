@@ -15,11 +15,15 @@ const initialState: User = {
 }
 
 export const fetchData = createAsyncThunk("fetchUer", async () => {
-    console.log('action');
     const result = await fetch("http://localhost:3000/api/userdetail");
     return result.json();
+});
 
-})
+// export const postPDf = createAsyncThunk("postPdf",async()=>{
+//     const result = await fetch("http://localhost:3000/api/userdetail");
+//     return result.json();
+// })
+
 const Slice = createSlice({
     initialState,
     reducers: {
@@ -31,13 +35,12 @@ const Slice = createSlice({
             let localData = JSON.stringify(current(state.data))
             state.data.push(newData);
             localStorage.setItem('users', localData)
-            console.log(current(state.data))
         }
     },
     name: 'addUser',
 
     extraReducers: (builder: any) => {
-        builder.addCase(fetchData.fulfilled, (state: { issLoading: boolean; fetchUserData: string | {}}, action: PayloadAction<String>) => {
+        builder.addCase(fetchData.fulfilled, (state: { issLoading: boolean; fetchUserData: string | {} }, action: PayloadAction<String>) => {
             state.issLoading = false,
                 state.fetchUserData = action.payload
         })

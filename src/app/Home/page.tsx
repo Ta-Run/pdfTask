@@ -12,6 +12,7 @@ function PdfHome() {
   const [numPages, setNumPages] = useState<number | any | undefined>();
   const [pageNumber, setPageNumber] = useState<number | any>(1);
   const [selectedFile, setSelectedFile] = useState<File | null | any>(null);
+  const [file, setFile] = useState<File | null | any>(null);
   const usedispatch: any = useDispatch();
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
@@ -20,18 +21,56 @@ function PdfHome() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+
     if (files) {
       const file = files[0];
+      setFile(file);
       setSelectedFile(file);
     }
   }
+
+  const handleUpload = async () => {
+    try {
+      if (!file) {
+        console.error('Please select a file.');
+        return;
+      }
+
+      // Create a FormData object
+      const formData = new FormData();
+      formData.append('fileName', file);
+
+      // Make a POST request using fetch
+      const response = await fetch('http://localhost:3000/api/uploadPdf', {
+        method: 'POST',
+        body: formData,
+      });
+      console.log(response.body)
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('File upload successful:', data);
+      } else {
+        console.error('File upload failed:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error uploading file:');
+    }
+  };
+
 
   useEffect(() => {
     const data = usedispatch(fetchData())
     data.then((res: any) => {
       console.log(res)
-    })
+        })
   })
+
+  const checkInput=(e:any)=>{
+    console.log(e)
+   const value = e.target.value;
+   console.log(value)
+  }
 
   return (
     <div className='md:container md:mx-auto px-4 rounded-md'>
@@ -40,17 +79,17 @@ function PdfHome() {
           <Page className="" devicePixelRatio={1} pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} scale={1.5} loading={"Loading page…"} />
         </Document>
         <form className='mt-8'>
-          <input type="file" className='file:border file:border-solid ..' onChange={(e) => handleFileChange(e)} />
+          <input type="file"  className='file:border file:border-solid ..' onChange={(e) => handleFileChange(e)} />
         </form>
         <div className='grid grid-cols-3 gap-4 place-items-end h-26 ...'>
-          <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ...">
+          <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ... " onClick={handleUpload} >
             Save Changes
           </button>
         </div>
       </div>
       <div className='box-border h-132 w-132 p-4 border-4 mt-12 shadow-2xl rounded-md'>
         Add Filter and search bar data for get the data
-        <input type="text" placeholder='Serach Pdf' />
+        <input type="text"  placeholder='Serach Pdf' />
         <button className="transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none ...">
           Search
         </button>

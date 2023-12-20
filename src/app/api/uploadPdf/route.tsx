@@ -1,21 +1,48 @@
-import { NextResponse } from 'next/server';
-import user from '../../../../models/user';
-import dbConnect from '../../../../config/dbconnect';
+// app/api/upload
+import { connectToDb, fileExists } from "../../../../config/dbconnect";
+import { NextResponse } from "next/server";
+import { Readable } from "stream";
 
-export async function POST(request: any,) {
-    try {
-        await dbConnect()
-        const data = await request.formData()
-        const file = data.get('file');
-        if (!file) {
-            return NextResponse.json({ "massage": 'file not found ', success: false })
-        }
-        const byteData = await file.arrayBuffer();
-        const buffer = Buffer.from(byteData);
-        const pdfStore = new user({ pdfFile: buffer }).save();
-        return NextResponse.json({ result: pdfStore, success: true })
-    } catch (err) {
-        console.log(err)
-        return NextResponse.json({ result: err })
+export async function POST(req: Request) {
+  const { bucket } = await connectToDb();
+  // get the form data
+  const data = await req.formData();
+
+  // map through all the entries
+  for (const entry of Array.from(data.entries())) {
+    const [key, value] = entry;
+    // FormDataEntryValue can either be type `Blob` or `string`
+    // if its type is object then it's a Blob
+    const isFile = typeof value == "object";
+
+    if (isFile) {
+      const blob = value as unknown as Blob;
+
+      const filename = blob.name;
+      console.log(filename)
+
+      const existing = await fileExists(filename);
+      if (existing) {
+        // If file already exists, let's skip it.
+        // If you want a different behavior such as override, modify this part.
+        continue;
+      }
+
+      //conver the blob to stream
+      const buffer = Buffer.from(await blob.arrayBuffer());
+      const stream = Readable.from(buffer);
+
+      const uploadStream = bucket.openUploadStream(filename, {
+        // make sure to add content type so that it will be easier to set later.
+        contentType: blob.type,
+        metadata: {}, //add your metadata here if any
+      });
+
+      // pipe the readable stream to a writeable stream to save it to the database
+      await stream.pipe(uploadStream);
     }
+  }
+
+  // return the response after all the entries have been processed.
+  return NextResponse.json({ success: true });
 }

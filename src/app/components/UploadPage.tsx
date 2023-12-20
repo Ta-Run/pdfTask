@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
-function PdfHome() {
+function UploadPage() {
   const [numPages, setNumPages] = useState<number | any | undefined>();
   const [pageNumber, setPageNumber] = useState<number | any>(1);
   const [selectedFile, setSelectedFile] = useState<File | null | any>(null);
@@ -23,7 +23,6 @@ function PdfHome() {
     const files = e.target.files;
     if (files) {
       const file = files[0];
-      // setFile(file);
       setSelectedFile(file);
     }
   }
@@ -31,13 +30,24 @@ function PdfHome() {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const data = new FormData();
-    data.set('file', file);
+    data.append('file', file)
+    // data.set('file', file);
     const result = await fetch('api/uploadPdf', {
       method: "POST",
+      headers:{"Content-Type":"multipart/form-data"},
       body: data,
     })
-    console.log(result)
+
   };
+
+  const onChange =(e : any)=>{
+    const reader  = new FileReader
+    reader.onload=()=>{
+      if(reader.readyState ===2){
+        console.log('file is load')
+      }
+    }
+  }
 
   const fetchDataAsync = async () => {
     try {
@@ -61,7 +71,7 @@ function PdfHome() {
         </Document>
         <form onSubmit={onSubmit} className='mt-8'>
           <input type="file" className='file:border file:border-solid ..' onChange={(e) => setFile(e.target.files?.[0])} />
-
+          <input type="file" name='image' className='file:border file:border-solid ..' onChange={onChange} />
           <div className='grid grid-cols-3 gap-4 place-items-end h-26 ...'>
             <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ... " type='submit' >
               Save Changes
@@ -80,7 +90,7 @@ function PdfHome() {
       <div className='md:flex justify-center my-7  rounded-md'>
         Recent Added Files
         <div className='sm:flex justify-center rounded-md'>
-          {
+          {/* {
             fileData.map((key: any, file: any) => {
               if (key.pdfFile) {
                 return (<>
@@ -89,11 +99,11 @@ function PdfHome() {
                 )
               }
             })
-          }
+          } */}
         </div>
 
       </div>
     </div>
   );
 }
-export default PdfHome;
+export default UploadPage;

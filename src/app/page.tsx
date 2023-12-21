@@ -1,5 +1,5 @@
 
-import PdfHome from "./components/UploadPage"
+import PdfHome from "./components/MainPage"
 
 
 export default function Home() {

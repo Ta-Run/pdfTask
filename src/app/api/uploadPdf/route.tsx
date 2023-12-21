@@ -8,10 +8,9 @@ export async function POST(req: Request) {
   for (const entry of Array.from(data.entries())) {
     const [key, value] = entry;
     const isFile = typeof value == "object";
-    if (isFile) {
+     if (isFile) {
       const blob = value as unknown as Blob;
       const filename = blob.name;
-      console.log(filename)
       const existing = await fileExists(filename);
       if (existing) {
         continue;
@@ -26,6 +25,5 @@ export async function POST(req: Request) {
       await stream.pipe(uploadStream);
     }
   }
-
   return NextResponse.json({ success: true });
 }

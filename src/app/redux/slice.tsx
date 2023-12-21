@@ -2,6 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice, current, nanoid } from '@
 interface User {
     name: string,
     fetchUserData: String | [],
+    fetchPdfData: String | [],
     data: {
         id: String,
         name: string,
@@ -11,10 +12,11 @@ interface User {
 const initialState: User = {
     data: [],
     name: 'addUser',
-    fetchUserData: []
+    fetchUserData: [],
+    fetchPdfData: []
 }
 
-export const fetchData = createAsyncThunk("fetchUer", async () => {
+export const fetchData = createAsyncThunk("fetchUser", async () => {
     const result = await fetch("http://localhost:3000/api/userdetail");
     return result.json();
 });
@@ -23,6 +25,11 @@ export const fetchData = createAsyncThunk("fetchUer", async () => {
 //     const result = await fetch("http://localhost:3000/api/userdetail");
 //     return result.json();
 // })
+
+export const fetchPdf = createAsyncThunk("fetchPdf", async () => {
+    const result = await fetch("http://localhost:3000/api/pdfFiles");
+    return result.json();
+});
 
 const Slice = createSlice({
     initialState,
@@ -40,9 +47,11 @@ const Slice = createSlice({
     name: 'addUser',
 
     extraReducers: (builder: any) => {
-        builder.addCase(fetchData.fulfilled, (state: { issLoading: boolean; fetchUserData: string | {} }, action: PayloadAction<String>) => {
+        builder.addCase(fetchData.fulfilled, fetchPdf.fulfilled, (state: { issLoading: boolean; fetchUserData: string | {}, fetchPdfData: string | {} }, action: PayloadAction<String>) => {
             state.issLoading = false,
-                state.fetchUserData = action.payload
+                state.fetchUserData = action.payload,
+                state.fetchPdfData = action.payload
+
         })
     }
 })

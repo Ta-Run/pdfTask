@@ -1,6 +1,7 @@
 import { connectToDb, fileExists } from "../../../../config/dbconnect";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Readable } from "stream";
+import { GridFSFile } from "mongodb";
 
 export async function POST(req: Request) {
   const { bucket } = await connectToDb();
@@ -26,4 +27,18 @@ export async function POST(req: Request) {
     }
   }
   return NextResponse.json({ success: true });
+}
+
+export async function GET(requests: NextRequest) {
+  try {
+       let pdfFile: GridFSFile[] = [];
+       const fileData = await connectToDb();
+       const getBucket = fileData.bucket.find();
+       for await (const file of getBucket) {
+            pdfFile.push(file)
+       }
+       return NextResponse.json({ sucess: true, result: pdfFile });
+  } catch (err) {
+       return NextResponse.json({ sucess: false, message: err });
+  }
 }

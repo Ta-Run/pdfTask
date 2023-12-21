@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-import { fetchData } from '../redux/slice';
 import { useDispatch } from 'react-redux';
+import { fetchPdf } from '../redux/slice';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
@@ -31,23 +31,20 @@ function UploadPage() {
     e.preventDefault();
     const data = new FormData();
     data.append('file', file)
-    // data.set('file', file);
     const result = await fetch('api/uploadPdf', {
       method: "POST",
-      headers:{"Content-Type":"multipart/form-data"},
+      headers: { "Content-Type": "multipart/form-data" },
       body: data,
     })
 
   };
 
-
   const fetchDataAsync = async () => {
     try {
-      const data = await usedispatch(fetchData());
-      setFileData(data.payload.result);
+      const pdfData = await usedispatch(fetchPdf());
+      setFileData(pdfData.payload.result)
     } catch (error) {
       console.error('Error fetching data:', error);
-      // Handle the error, e.g., show an error message to the user
     }
   };
   useEffect(() => {
@@ -62,7 +59,7 @@ function UploadPage() {
           <Page className="" devicePixelRatio={1} pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} scale={1.5} loading={"Loading page…"} />
         </Document>
         <form onSubmit={onSubmit} className='mt-8'>
-          <input type="file" className='file:border file:border-solid ..' onChange={(e) => setFile(e.target.files?.[0])} />
+          <input type="file" className='file:border file:border-solid ..' onChange={handleFileChange} />
           <div className='grid grid-cols-3 gap-4 place-items-end h-26 ...'>
             <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ... " type='submit' >
               Save Changes
@@ -81,16 +78,17 @@ function UploadPage() {
       <div className='md:flex justify-center my-7  rounded-md'>
         Recent Added Files
         <div className='sm:flex justify-center rounded-md'>
-          {/* {
-            fileData.map((key: any, file: any) => {
-              if (key.pdfFile) {
-                return (<>
-                  <div className='mx-2 box-border h-56 w-56 p-4 border-4 shadow-2xl hover:bg-violet-200 rounded-md ...' key={file}>{key.pdfFile}</div>
-                </>
-                )
-              }
+          {
+            fileData.map((file: any, key: any) => {
+              console.log(file.filename)
+              return (<>
+                <div className='mx-2 box-border h-56 w-56 p-4 border-4 shadow-2xl hover:bg-violet-200 rounded-md ...' key={file}>{file.filename} filrNAme</div>
+              </>
+              )
+
             })
-          } */}
+          }
+          <h1>file</h1>
         </div>
 
       </div>

@@ -40,14 +40,6 @@ function UploadPage() {
 
   };
 
-  const onChange =(e : any)=>{
-    const reader  = new FileReader
-    reader.onload=()=>{
-      if(reader.readyState ===2){
-        console.log('file is load')
-      }
-    }
-  }
 
   const fetchDataAsync = async () => {
     try {
@@ -71,7 +63,6 @@ function UploadPage() {
         </Document>
         <form onSubmit={onSubmit} className='mt-8'>
           <input type="file" className='file:border file:border-solid ..' onChange={(e) => setFile(e.target.files?.[0])} />
-          <input type="file" name='image' className='file:border file:border-solid ..' onChange={onChange} />
           <div className='grid grid-cols-3 gap-4 place-items-end h-26 ...'>
             <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ... " type='submit' >
               Save Changes
